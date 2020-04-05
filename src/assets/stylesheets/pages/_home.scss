@@ -1,8 +1,7 @@
 .page-home {
-
   .map,
   .map-base {
-    height: 50vh;
+    // height: 50vh;
   }
 
   main {
@@ -23,7 +22,6 @@
   }
 
   .popup-gatsby-content {
-
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -33,16 +31,14 @@
     padding-right: 1em;
 
     h1 {
-      margin: 0 0 .2em;
+      margin: 0 0 0.2em;
     }
     p {
-      margin: 0 0 .5em;
+      margin: 0 0 0.5em;
     }
-
   }
 
   .gatsby-astronaut {
-
     overflow: hidden;
     width: 10em;
     height: 10em;
@@ -55,13 +51,10 @@
       width: 100%;
       height: auto;
     }
-
   }
-
 }
 
 .home-start {
-
   padding-top: 4em;
   padding-bottom: 4em;
 
@@ -76,5 +69,4 @@
   pre {
     margin-bottom: 1.5em;
   }
-
 }
