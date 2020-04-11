@@ -55,7 +55,7 @@
 .icon-marker-tooltip {
   display: none;
   position: absolute;
-  bottom: 100%;
+  top: 100%;
   width: 16em;
   font-size: 1.4em;
   padding: 1em;
@@ -67,7 +67,8 @@
   &:before {
     display: block;
     position: absolute;
-    bottom: -0.6em;
+    top: -0.6em;
+    // bottom: -0.6em;
     left: 50%;
     content: "";
     width: 1.4em;

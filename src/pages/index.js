@@ -4,10 +4,7 @@ import Helmet from "react-helmet";
 import L from "leaflet";
 
 import Layout from "components/Layout";
-import Container from "components/Container";
 import Map from "components/Map";
-
-import gatsby_astronaut from "assets/images/gatsby-astronaut.jpg";
 
 const LOCATION = {
   lat: 0,
@@ -16,9 +13,11 @@ const LOCATION = {
 const CENTER = [LOCATION.lat, LOCATION.lng];
 const DEFAULT_ZOOM = 2;
 
-const IndexPage = () => {
-  const markerRef = useRef();
+const getData = () => {
+  return axios.get("https://corona.lmao.ninja/countries");
+};
 
+const IndexPage = () => {
   /**
    * mapEffect
    * @description Fires a callback once the page renders
@@ -29,72 +28,93 @@ const IndexPage = () => {
     let response;
 
     try {
-      response = await axios.get("https://corona.lmao.ninja/countries");
+      axios.get("https://corona.lmao.ninja/countries").then(res => {
+        response = res;
+        const { data = [] } = response;
+        const hasData = Array.isArray(data) && data.length > 0;
+        if (!hasData) return;
+        data.push({
+          updated: 1586499601723,
+          country: "Avinash",
+          countryInfo: {
+            _id: 1,
+            iso2: "AV",
+            iso3: "AVI",
+            lat: 18.5204,
+            long: 73.8567
+          },
+          cases: 1,
+          todayCases: 0,
+          deaths: 0,
+          todayDeaths: 0,
+          recovered: 0,
+          active: 0,
+          critical: 0,
+          casesPerOneMillion: 0,
+          deathsPerOneMillion: 0,
+          tests: 0,
+          testsPerOneMillion: 0
+        });
+        const geoJSON = {
+          type: "FeatureCollection",
+          features: data.map((country = {}) => {
+            const { countryInfo = {} } = country;
+            const { lat, long: lng } = countryInfo;
+            return {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [lng, lat]
+              },
+              properties: { ...country }
+            };
+          })
+        };
+        const geoJSONLayer = new L.geoJSON(geoJSON, {
+          pointToLayer: (feature = {}, latlng) => {
+            const { properties = {} } = feature;
+            let updatedFormatted;
+            let casesString;
+
+            const { country, updated, cases, deaths, recovered } = properties;
+
+            casesString = `${cases}`;
+
+            if (cases > 1000) casesString = `${casesString.slice(0, -3)}k+`;
+
+            if (updated) updatedFormatted = new Date(updated).toLocaleString();
+            console.log("world");
+            const html = `
+              <span class="icon-marker">
+                <span class="icon-marker-tooltip">
+                  <h2>${country}</h2>
+                  <ul>
+                    <li><strong>Confirmed:</strong> ${cases}</li>
+                    <li><strong>Deaths:</strong> ${deaths}</li>
+                    <li><strong>Recovered:</strong> ${recovered}</li>
+                    <li><strong>Last Update:</strong> ${updatedFormatted}</li>
+                  </ul>
+                </span>
+                ${casesString}
+              </span>
+            `;
+
+            return L.marker(latlng, {
+              icon: L.divIcon({
+                className: "icon",
+                html
+              }),
+              riseOnHover: true
+            });
+          }
+        });
+        geoJSONLayer.addTo(map);
+      });
+      // console.log(response);
     } catch (e) {
       console.log(`Unable to fetch coronavirus data, due to${e.message}`, e);
       return;
     }
-
-    const { data = [] } = response;
-    const hasData = Array.isArray(data) && data.length > 0;
-
-    if (!hasData) return;
-
-    const geoJSON = {
-      type: "FeatureCollection",
-      features: data.map((country = {}) => {
-        const { countryInfo = {} } = country;
-        const { lat, long: lng } = countryInfo;
-        return {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [lng, lat]
-          },
-          properties: { ...country }
-        };
-      })
-    };
-
-    const geoJSONLayer = new L.geoJSON(geoJSON, {
-      pointToLayer: (feature = {}, latlng) => {
-        const { properties = {} } = feature;
-        let updatedFormatted;
-        let casesString;
-
-        const { country, updated, cases, deaths, recovered } = properties;
-
-        casesString = `${cases}`;
-
-        if (cases > 1000) casesString = `${casesString.slice(0, -3)}k+`;
-
-        if (updated) updatedFormatted = new Date(updated).toLocaleString();
-
-        const html = `
-          <span class="icon-marker">
-            <span class="icon-marker-tooltip">
-              <h2>${country}</h2>
-              <ul>
-                <li><strong>Confirmed:</strong> ${cases}</li>
-                <li><strong>Deaths:</strong> ${deaths}</li>
-                <li><strong>Recovered:</strong> ${recovered}</li>
-                <li><strong>Last Update:</strong> ${updatedFormatted}</li>
-              </ul>
-            </span>
-            ${casesString}
-          </span>
-        `;
-
-        return L.marker(latlng, {
-          icon: L.divIcon({
-            className: "icon",
-            html
-          }),
-          riseOnHover: true
-        });
-      }
-    });
-    geoJSONLayer.addTo(map);
   }
 
   const mapSettings = {
