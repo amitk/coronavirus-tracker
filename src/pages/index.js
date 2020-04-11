@@ -84,7 +84,9 @@ const IndexPage = () => {
 
             if (updated) updatedFormatted = new Date(updated).toLocaleString();
             console.log("world");
-            const html = `
+            let html =
+              country !== "Avinash"
+                ? `
               <span class="icon-marker">
                 <span class="icon-marker-tooltip">
                   <h2>${country}</h2>
@@ -97,7 +99,20 @@ const IndexPage = () => {
                 </span>
                 ${casesString}
               </span>
-            `;
+            `
+                : `
+            <span class="icon-marker">
+            <span class="icon-marker-tooltip">
+              <h2>IN LOVE</h2>
+              <ul>
+                <li><strong>Confirmed:</strong>1</li>
+                <li><strong>Dead:</strong> NO</li>
+                <li><strong>Recovered:</strong> UNABLE TO RECOVER</li>
+                <li><strong>Last Update:</strong> WHEN YOU WHERE IN SIGHT</li>
+              </ul>
+            </span>
+            ${casesString}
+          </span>`;
 
             return L.marker(latlng, {
               icon: L.divIcon({
