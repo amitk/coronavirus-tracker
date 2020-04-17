@@ -28,7 +28,7 @@ const IndexPage = () => {
     let response;
 
     try {
-      axios.get("https://corona.lmao.ninja/countries").then(res => {
+      axios.get("https://corona.lmao.ninja/v2/countries").then(res => {
         response = res;
         const { data = [] } = response;
         const hasData = Array.isArray(data) && data.length > 0;
