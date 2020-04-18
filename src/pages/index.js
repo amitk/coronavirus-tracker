@@ -33,28 +33,28 @@ const IndexPage = () => {
         const { data = [] } = response;
         const hasData = Array.isArray(data) && data.length > 0;
         if (!hasData) return;
-        data.push({
-          updated: 1586499601723,
-          country: "Avinash",
-          countryInfo: {
-            _id: 1,
-            iso2: "AV",
-            iso3: "AVI",
-            lat: 18.5204,
-            long: 73.8567
-          },
-          cases: 1,
-          todayCases: 0,
-          deaths: 0,
-          todayDeaths: 0,
-          recovered: 0,
-          active: 0,
-          critical: 0,
-          casesPerOneMillion: 0,
-          deathsPerOneMillion: 0,
-          tests: 0,
-          testsPerOneMillion: 0
-        });
+        // data.push({
+        //   updated: 1586499601723,
+        //   country: "Avinash",
+        //   countryInfo: {
+        //     _id: 1,
+        //     iso2: "AV",
+        //     iso3: "AVI",
+        //     lat: 18.5204,
+        //     long: 73.8567
+        //   },
+        //   cases: 1,
+        //   todayCases: 0,
+        //   deaths: 0,
+        //   todayDeaths: 0,
+        //   recovered: 0,
+        //   active: 0,
+        //   critical: 0,
+        //   casesPerOneMillion: 0,
+        //   deathsPerOneMillion: 0,
+        //   tests: 0,
+        //   testsPerOneMillion: 0
+        // });
         const geoJSON = {
           type: "FeatureCollection",
           features: data.map((country = {}) => {
@@ -85,18 +85,19 @@ const IndexPage = () => {
             if (updated) updatedFormatted = new Date(updated).toLocaleString();
             console.log("world");
             let html = `
-            <span class="icon-marker">
-            <span class="icon-marker-tooltip">
-              <h2>IN LOVE</h2>
-              <ul>
-                <li><strong>Confirmed:</strong>1</li>
-                <li><strong>Dead:</strong> NO</li>
-                <li><strong>Recovered:</strong> UNABLE TO RECOVER</li>
-                <li><strong>Last Update:</strong> WHEN YOU WHERE IN SIGHT</li>
-              </ul>
-            </span>
-            ${casesString}
-          </span>`;
+              <span class="icon-marker">
+                <span class="icon-marker-tooltip">
+                  <h2>${country}</h2>
+                  <ul>
+                    <li><strong>Confirmed:</strong> ${cases}</li>
+                    <li><strong>Deaths:</strong> ${deaths}</li>
+                    <li><strong>Recovered:</strong> ${recovered}</li>
+                    <li><strong>Last Update:</strong> ${updatedFormatted}</li>
+                  </ul>
+                </span>
+                ${casesString}
+              </span>
+            `;
 
             return L.marker(latlng, {
               icon: L.divIcon({
