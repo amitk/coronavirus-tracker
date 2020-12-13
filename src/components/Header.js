@@ -10,11 +10,6 @@ const Header = () => {
     <header>
       <Container type="content">
         <p>(COVID-19) Tracker</p>
-        <Input type="select" name="select" id="country-name">
-          <option>select country</option>
-          <option>India</option>
-          <option>Australia</option>
-        </Input>
       </Container>
     </header>
   );
